@@ -1,4 +1,4 @@
-### IoTHub
+### IoTHub Extension
 
 Fully featured IoT Hub input and output bindings to Azure IoT Hub, allowing common interactions between cloud and devices to be done from Azure Functions. Common scenarios currently supported are: 
   * Cloud to Device: output binding that sends messages from Azure Functions to IoTHub, which then transfer the messages to specified device id in the message structure
