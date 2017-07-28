@@ -1,0 +1,25 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "myEventHubMessage",
+      "direction": "in",
+      "path": "messages/events",
+      "connection": "IoTConnectionString",
+      "consumerGroup": "secondconsumergroup"
+    },
+    {
+      "name": "cloudToDevice",
+      "type": "ioTCloudToDevice",
+      "direction": "out",
+      "connection": "IoTConnectionString"
+    },
+    {
+      "name": "setDeviceTwin",
+      "type": "ioTSetDeviceTwin",
+      "direction": "out",
+      "connection": "IoTConnectionString"
+    }
+  ],
+  "disabled": false
+}

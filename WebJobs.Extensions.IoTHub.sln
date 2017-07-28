@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webjobs.Extensions.IoTHub.Tests", "test\Webjobs.Extensions.IoTHub.Tests\Webjobs.Extensions.IoTHub.Tests.csproj", "{623C71B0-8B5E-46B4-83AE-6CE9E3E4B13D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJobs.Extensions.IoTHub", "src\WebJobs.Extensions.IoTHub\WebJobs.Extensions.IoTHub.csproj", "{24E41ED3-0F5A-47DA-A32E-79A8FE9D6588}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C5A6A582-90C8-4C55-A0E8-F7EDB6F6D6AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{05892904-2034-4A3D-A1FC-F5D268C0C630}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{623C71B0-8B5E-46B4-83AE-6CE9E3E4B13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623C71B0-8B5E-46B4-83AE-6CE9E3E4B13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623C71B0-8B5E-46B4-83AE-6CE9E3E4B13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623C71B0-8B5E-46B4-83AE-6CE9E3E4B13D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E41ED3-0F5A-47DA-A32E-79A8FE9D6588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E41ED3-0F5A-47DA-A32E-79A8FE9D6588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E41ED3-0F5A-47DA-A32E-79A8FE9D6588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E41ED3-0F5A-47DA-A32E-79A8FE9D6588}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{623C71B0-8B5E-46B4-83AE-6CE9E3E4B13D} = {C5A6A582-90C8-4C55-A0E8-F7EDB6F6D6AC}
+		{24E41ED3-0F5A-47DA-A32E-79A8FE9D6588} = {05892904-2034-4A3D-A1FC-F5D268C0C630}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,26 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "myEventHubMessage",
+      "direction": "in",
+      "path": "messages/events",
+      "connection": "IoTConnectionString",
+      "consumerGroup": "$Default"
+    },
+    {
+      "DeviceId": "{DeviceId}",
+      "name": "getDeviceTwin",
+      "type": "iotGetDeviceTwin",
+      "direction": "in",
+      "connection": "IoTConnectionString"
+    },
+    {
+      "name": "setDeviceTwin",
+      "type": "ioTSetDeviceTwin",
+      "direction": "out",
+      "connection": "IoTConnectionString"
+    }
+  ],
+  "disabled": false
+}

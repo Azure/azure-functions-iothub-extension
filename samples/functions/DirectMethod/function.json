@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "eventHubMessage",
+      "direction": "in",
+      "path": "eventhubdirectmethods",
+      "connection": "DirectMethodEH_RootManageSharedAccessKey_EVENTHUB"
+    },
+    {
+      "name": "dm",
+      "type": "ioTDirectMethod",
+      "direction": "out",
+      "connection": "IoTConnectionString"
+    }
+  ],
+  "disabled": false
+}

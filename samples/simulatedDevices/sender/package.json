@@ -1,0 +1,19 @@
+{
+  "name": "sender",
+  "version": "1.0.0",
+  "description": "send telemetry data points and direct method requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "elle_elle-555"
+  },
+  "author": "ElleTojaroon",
+  "license": "ISC",
+  "dependencies": {
+    "azure-iot-device": "^1.1.14",
+    "azure-iot-device-mqtt": "^1.1.14"
+  }
+}
