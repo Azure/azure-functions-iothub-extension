@@ -66,3 +66,11 @@ Your function should receive messages from **sender.js**
 > Direct Method assumes that the device has a method matched with the specified method's name given in the argument. Otherwise, Function throws an exception. 
 
 > Executing direct method that takes longer than the lifetime of a Function (5 minutes by default and can be set up to 10 minutes) can never be completed.
+
+## License
+
+This project is under the benevolent umbrella of the [.NET Foundation](http://www.dotnetfoundation.org/) and is licensed under [the MIT License](https://github.com/Azure/azure-webjobs-sdk/blob/master/LICENSE.txt)
+
+## Contributing
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
