@@ -11,6 +11,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub
         // Destination IoT DeviceId
         public string DeviceId { set; get; }
 
+#error Remove this?
         // InvokeId starting with 1 per DeviceId
         public string UpdateId { set; get; }
 

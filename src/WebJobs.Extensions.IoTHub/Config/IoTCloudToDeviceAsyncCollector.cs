@@ -20,10 +20,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
             // create client;    
             IoTCloudToDeviceAsyncCollector.serviceClient = serviceClient;
         }
-        public Task AddAsync(IoTCloudToDeviceItem item, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task AddAsync(IoTCloudToDeviceItem item, CancellationToken cancellationToken = default(CancellationToken))
         {
-            SendCloudToDeviceMessageAsync(item).Wait();
-            return Task.CompletedTask;
+#error can't .Wait() 
+            await SendCloudToDeviceMessageAsync(item);
         }
 
         public Task FlushAsync(CancellationToken cancellationToken = default(CancellationToken))

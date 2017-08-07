@@ -9,9 +9,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTDirectMethodExtension : IExtensionConfigProvider
     {
+#error no statics!!!  private Dictionary<string, ServiceClient> _clients; 
         private static string connectionString;
         private static ServiceClient serviceClient;
-
+        
         public void Initialize(ExtensionConfigContext context)
         {
             // This allows a user to bind to IAsyncCollector<string>, and the sdk
@@ -35,7 +36,9 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTDirectMethodItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
+#error would this work?  return JsonConvert.DeserializeObject<IoTDirectMethodItem>(str);
+
+            var item = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);            
 
             return new IoTDirectMethodItem
             {
