@@ -17,6 +17,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub
         [AutoResolve]
         public string DeviceId { get; set; }
 
+#error Do we need this? 
         [AutoResolve]
         public string InvokeId { get; set; }
 

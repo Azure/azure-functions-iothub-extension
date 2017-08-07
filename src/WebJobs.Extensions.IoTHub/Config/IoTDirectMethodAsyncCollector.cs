@@ -31,8 +31,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
         {
             var methodInvocation = new CloudToDeviceMethod(methodName) { ResponseTimeout = TimeSpan.FromSeconds(30) };
 
+#error include cancellation token 
             var response = await serviceClient.InvokeDeviceMethodAsync(deviceID, methodInvocation);
 
+#error no Console.WriteLine 
             Console.WriteLine("Response status: {0}, payload:", response.Status);
             Console.WriteLine(response.GetPayloadAsJson());
         }
