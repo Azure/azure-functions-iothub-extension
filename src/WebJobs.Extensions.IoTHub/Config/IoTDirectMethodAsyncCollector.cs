@@ -8,18 +8,16 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTDirectMethodAsyncCollector : IAsyncCollector<IoTDirectMethodItem>
     {
-        private static ServiceClient serviceClient;
+        private ServiceClient serviceClient;
 
         public IoTDirectMethodAsyncCollector(ServiceClient serviceClient, IoTDirectMethodAttribute attribute)
         {
-            // create client;
-            IoTDirectMethodAsyncCollector.serviceClient = serviceClient;
+            this.serviceClient = serviceClient;
         }
 
-        public Task AddAsync(IoTDirectMethodItem item, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task AddAsync(IoTDirectMethodItem item, CancellationToken cancellationToken = default(CancellationToken))
         {
-            InvokeMethod(item.DeviceId, item.MethodName).Wait();
-            return Task.CompletedTask;
+            await InvokeMethod(item.DeviceId, item.MethodName, item.Payload, cancellationToken);
         }
 
         public Task FlushAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -27,14 +25,11 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
             return Task.CompletedTask;
         }
 
-        private static async Task InvokeMethod(string deviceID, string methodName)
+        private async Task InvokeMethod(string deviceID, string methodName, string payload, CancellationToken cancellationToken)
         {
             var methodInvocation = new CloudToDeviceMethod(methodName) { ResponseTimeout = TimeSpan.FromSeconds(30) };
-
-            var response = await serviceClient.InvokeDeviceMethodAsync(deviceID, methodInvocation);
-
-            Console.WriteLine("Response status: {0}, payload:", response.Status);
-            Console.WriteLine(response.GetPayloadAsJson());
+            methodInvocation.SetPayloadJson(payload);
+            var response = await serviceClient.InvokeDeviceMethodAsync(deviceID, methodInvocation, cancellationToken);
         }
     }
 }

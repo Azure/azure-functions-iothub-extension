@@ -9,11 +9,14 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTSetDeviceTwinExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        static RegistryManager registryManager;
+        private Dictionary<string, RegistryManager> _manager;
+        private string connectionString;
+        private RegistryManager registryManager;
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _manager = new Dictionary<string, RegistryManager>();
+
             // This allows a user to bind to IAsyncCollector<string>, and the sdk
             // will convert that to IAsyncCollector<IoTCloudToDeviceItem>
             context.AddConverter<string, IoTSetDeviceTwinItem>(ConvertToItem);
@@ -35,22 +38,27 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTSetDeviceTwinItem ConvertToItem(string str)
         {
+            //return JsonConvert.DeserializeObject<IoTSetDeviceTwinItem>(str);
             var item = JsonConvert.DeserializeObject<Dictionary<string, object>>(str);
 
             return new IoTSetDeviceTwinItem
             {
                 DeviceId = (string)item["DeviceId"],
-                UpdateId = (string)item["UpdateId"],
                 Patch = JsonConvert.SerializeObject(item["Patch"])
             };
         }
 
         private IAsyncCollector<IoTSetDeviceTwinItem> BuildCollector(IoTSetDeviceTwinAttribute attribute)
         {
-            if (registryManager == null)
+            connectionString = attribute.Connection;
+            if (_manager.ContainsKey(connectionString))
             {
-                connectionString = attribute.Connection;
+                registryManager = _manager[connectionString];
+            }
+            else
+            {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                _manager.Add(connectionString, registryManager);
             }
 
             return new IoTSetDeviceTwinAsyncCollector(registryManager, attribute);

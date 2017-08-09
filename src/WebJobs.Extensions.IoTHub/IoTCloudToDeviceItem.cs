@@ -16,9 +16,6 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub
         // IoT DeviceId
         public string DeviceId { set; get; }
 
-        // MessegeId starting with 1 per DeviceId
-        public string MessageId { set; get; }
-
         // Messege sent from device to cloud
         // Invariant: {paramerter key}:{paramerter value};...
         public string Message { set; get; }

@@ -34,6 +34,8 @@ namespace Host
 
             var host = new JobHost(config);
 
+            //var method = typeof(Functions).GetMethod("Dummy");
+
             //Test some invocations.
             //var method = typeof(Functions).GetMethod("WriteMessageFromC2D");
             //host.Call(method);
@@ -52,7 +54,7 @@ namespace Host
 
             //// Test some invocations. 
             method = typeof(Functions).GetMethod("GetDeviceTwinTwinObject");
-            host.Call(method, new { deviceId = "receiverCarol", messageId = "123" });
+            host.Call(method, new { deviceId = "receiverBob", messageId = "123" });
 
             // host.RunAndBlock();
         }

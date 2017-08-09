@@ -9,11 +9,13 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTCloudToDeviceExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        private static ServiceClient serviceClient;
+        private Dictionary<string, ServiceClient> _clients;
+        private string connectionString;
+        private ServiceClient serviceClient;
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _clients = new Dictionary<string, ServiceClient>();
 
             // This allows a user to bind to IAsyncCollector<string>, and the sdk
             // will convert that to IAsyncCollector<IoTCloudToDeviceItem>
@@ -35,22 +37,20 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTCloudToDeviceItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
-
-            return new IoTCloudToDeviceItem
-            {
-                DeviceId = item["DeviceId"],
-                MessageId = item["MessageId"],
-                Message = str
-            };
+            return JsonConvert.DeserializeObject<IoTCloudToDeviceItem>(str);
         }
 
         private IAsyncCollector<IoTCloudToDeviceItem> BuildCollector(IoTCloudToDeviceAttribute attribute)
         {
-            if (serviceClient == null)
+            connectionString = attribute.Connection;
+            if (_clients.ContainsKey(connectionString))
             {
-                connectionString = attribute.Connection;
+                serviceClient = _clients[connectionString];
+            }
+            else
+            {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                _clients.Add(connectionString, serviceClient);
             }
 
             return new IoTCloudToDeviceAsyncCollector(serviceClient, attribute);

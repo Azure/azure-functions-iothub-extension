@@ -9,11 +9,14 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTDirectMethodExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        private static ServiceClient serviceClient;
+        private Dictionary<string, ServiceClient> _clients;
+        private string connectionString;
+        private ServiceClient serviceClient;
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _clients = new Dictionary<string, ServiceClient>();
+
             // This allows a user to bind to IAsyncCollector<string>, and the sdk
             // will convert that to IAsyncCollector<IoTCloudToDeviceItem>
             context.AddConverter<string, IoTDirectMethodItem>(ConvertToItem);
@@ -35,22 +38,34 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTDirectMethodItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
+            //return JsonConvert.DeserializeObject<IoTDirectMethodItem>(str);
+            var item = JsonConvert.DeserializeObject<Dictionary<string, Object>>(str);
 
-            return new IoTDirectMethodItem
-            {
-                DeviceId = item["DeviceId"],
-                InvokeId = item["InvokeId"],
-                MethodName = item["MethodName"]
-            };
+            return (item.ContainsKey("Payload")) ?
+                new IoTDirectMethodItem
+                {
+                    DeviceId = item["DeviceId"].ToString(),
+                    MethodName = item["MethodName"].ToString(),
+                    Payload = item["Payload"].ToString()
+                } :
+                new IoTDirectMethodItem
+                {
+                    DeviceId = item["DeviceId"].ToString(),
+                    MethodName = item["MethodName"].ToString()
+                };
         }
 
         private IAsyncCollector<IoTDirectMethodItem> BuildCollector(IoTDirectMethodAttribute attribute)
         {
-            if (serviceClient == null)
+            connectionString = attribute.Connection;
+            if (_clients.ContainsKey(connectionString))
             {
-                connectionString = attribute.Connection;
+                serviceClient = _clients[connectionString];
+            }
+            else
+            {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                _clients.Add(connectionString, serviceClient);
             }
 
             return new IoTDirectMethodAsyncCollector(serviceClient, attribute);

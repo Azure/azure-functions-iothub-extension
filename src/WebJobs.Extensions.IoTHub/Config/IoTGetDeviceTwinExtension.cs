@@ -11,12 +11,15 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTGetDeviceTwinExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        static RegistryManager registryManager;
+        private Dictionary<string, RegistryManager> _manager;
+        private string connectionString;
+        private RegistryManager registryManager;
         private Twin deviceTwin;
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _manager = new Dictionary<string, RegistryManager>();
+
             // This is useful on input. 
             context.AddConverter<Twin, string>(ConvertToString);
             context.AddConverter<Twin, Newtonsoft.Json.Linq.JObject>(ConvertToJObject);
@@ -31,12 +34,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
         private string ConvertToString(Twin item)
         {
             return JsonConvert.SerializeObject(item);
-        }
-
-        //private Twin ConvertToTwin(Twin item)
-        //{
-        //    return item;
-        //}
+        }        
 
         private JObject ConvertToJObject(Twin results)
         {
@@ -64,10 +62,15 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private async Task GetDeviceTwinAsync(IoTGetDeviceTwinAttribute attribute)
         {
-            if (registryManager == null)
+            connectionString = attribute.Connection;
+            if (_manager.ContainsKey(connectionString))
             {
-                connectionString = attribute.Connection;
+                registryManager = _manager[connectionString];
+            }
+            else
+            {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                _manager.Add(connectionString, registryManager);
             }
 
             deviceTwin = await registryManager.GetTwinAsync(attribute.DeviceId);

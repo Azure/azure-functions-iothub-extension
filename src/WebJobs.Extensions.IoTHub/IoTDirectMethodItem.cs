@@ -11,10 +11,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub
         // Destination IoT DeviceId
         public string DeviceId { set; get; }
 
-        // InvokeId starting with 1 per DeviceId
-        public string InvokeId { set; get; }
-
         // MethodName to be invoked
         public string MethodName { set; get; }
+        
+        // Payload as arguments to the method
+        public string Payload { set; get; }
     }
 }
