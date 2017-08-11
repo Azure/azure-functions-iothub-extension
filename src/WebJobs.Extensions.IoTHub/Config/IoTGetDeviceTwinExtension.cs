@@ -12,8 +12,6 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
     public class IoTGetDeviceTwinExtension : IExtensionConfigProvider
     {
         private Dictionary<string, RegistryManager> _manager; // key: connection string
-        private string connectionString;
-        private RegistryManager registryManager;
         private Twin deviceTwin;
 
         public void Initialize(ExtensionConfigContext context)
@@ -57,7 +55,8 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private async Task GetDeviceTwinAsync(IoTGetDeviceTwinAttribute attribute)
         {
-            connectionString = attribute.Connection;
+            var connectionString = attribute.Connection;
+            RegistryManager registryManager = null;
             if (!_manager.TryGetValue(connectionString, out registryManager)) {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
                 _manager.Add(connectionString, registryManager);

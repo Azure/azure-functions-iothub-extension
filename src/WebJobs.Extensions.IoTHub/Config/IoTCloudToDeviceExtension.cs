@@ -10,8 +10,6 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
     public class IoTCloudToDeviceExtension : IExtensionConfigProvider
     {
         private Dictionary<string, ServiceClient> _clients; // key: connection string
-        private string connectionString;
-        private ServiceClient serviceClient;
 
         public void Initialize(ExtensionConfigContext context)
         {
@@ -42,7 +40,8 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IAsyncCollector<IoTCloudToDeviceItem> BuildCollector(IoTCloudToDeviceAttribute attribute)
         {
-            connectionString = attribute.Connection;
+            var connectionString = attribute.Connection;
+            ServiceClient serviceClient = null;
             if (!_clients.TryGetValue(connectionString, out serviceClient)) {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
                 _clients.Add(connectionString, serviceClient);

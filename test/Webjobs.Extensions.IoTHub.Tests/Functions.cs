@@ -79,7 +79,8 @@ namespace SampleFunctions
             var item3 = new
             {
                 DeviceId = deviceId,
-                MethodName = "writeLine"
+                MethodName = "writeLine",
+                Payload = new { }
             };
             output.Add(JsonConvert.SerializeObject(item3));
         }
