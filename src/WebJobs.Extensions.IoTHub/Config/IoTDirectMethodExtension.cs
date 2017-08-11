@@ -9,7 +9,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTDirectMethodExtension : IExtensionConfigProvider
     {
-        private Dictionary<string, ServiceClient> _clients;
+        private Dictionary<string, ServiceClient> _clients; // key: connection string
         private string connectionString;
         private ServiceClient serviceClient;
 
@@ -58,10 +58,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
         private IAsyncCollector<IoTDirectMethodItem> BuildCollector(IoTDirectMethodAttribute attribute)
         {
             connectionString = attribute.Connection;
-            if (_clients.ContainsKey(connectionString))
-            {
-                serviceClient = _clients[connectionString];
-            }
+            if (_clients.TryGetValue(connectionString, out serviceClient)) { }
             else
             {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
