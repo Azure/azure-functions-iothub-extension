@@ -43,9 +43,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
         private IAsyncCollector<IoTCloudToDeviceItem> BuildCollector(IoTCloudToDeviceAttribute attribute)
         {
             connectionString = attribute.Connection;
-            if (_clients.TryGetValue(connectionString, out serviceClient)) { }
-            else
-            {
+            if (!_clients.TryGetValue(connectionString, out serviceClient)) {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
                 _clients.Add(connectionString, serviceClient);
             }

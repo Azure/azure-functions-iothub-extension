@@ -38,22 +38,13 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTSetDeviceTwinItem ConvertToItem(string str)
         {
-            //return JsonConvert.DeserializeObject<IoTSetDeviceTwinItem>(str);
-            var item = JsonConvert.DeserializeObject<Dictionary<string, object>>(str);
-
-            return new IoTSetDeviceTwinItem
-            {
-                DeviceId = (string)item["DeviceId"],
-                Patch = JsonConvert.SerializeObject(item["Patch"])
-            };
+            return JsonConvert.DeserializeObject<IoTSetDeviceTwinItem>(str);
         }
 
         private IAsyncCollector<IoTSetDeviceTwinItem> BuildCollector(IoTSetDeviceTwinAttribute attribute)
         {
             connectionString = attribute.Connection;
-            if (_manager.TryGetValue(connectionString, out registryManager)) { }
-            else
-            {
+            if (!_manager.TryGetValue(connectionString, out registryManager)) {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
                 _manager.Add(connectionString, registryManager);
             }

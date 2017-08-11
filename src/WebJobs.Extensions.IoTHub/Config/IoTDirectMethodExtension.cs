@@ -38,33 +38,16 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTDirectMethodItem ConvertToItem(string str)
         {
-            //return JsonConvert.DeserializeObject<IoTDirectMethodItem>(str);
-            var item = JsonConvert.DeserializeObject<Dictionary<string, Object>>(str);
-
-            return (item.ContainsKey("Payload")) ?
-                new IoTDirectMethodItem
-                {
-                    DeviceId = item["DeviceId"].ToString(),
-                    MethodName = item["MethodName"].ToString(),
-                    Payload = item["Payload"].ToString()
-                } :
-                new IoTDirectMethodItem
-                {
-                    DeviceId = item["DeviceId"].ToString(),
-                    MethodName = item["MethodName"].ToString()
-                };
+            return JsonConvert.DeserializeObject<IoTDirectMethodItem>(str);
         }
 
         private IAsyncCollector<IoTDirectMethodItem> BuildCollector(IoTDirectMethodAttribute attribute)
         {
             connectionString = attribute.Connection;
-            if (_clients.TryGetValue(connectionString, out serviceClient)) { }
-            else
-            {
+            if (!_clients.TryGetValue(connectionString, out serviceClient)) {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
                 _clients.Add(connectionString, serviceClient);
             }
-
             return new IoTDirectMethodAsyncCollector(serviceClient, attribute);
         }
 

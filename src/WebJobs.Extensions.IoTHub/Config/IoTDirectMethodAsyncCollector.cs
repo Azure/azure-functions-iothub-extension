@@ -3,12 +3,13 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.Devices;
 using System.Threading;
 using System;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTDirectMethodAsyncCollector : IAsyncCollector<IoTDirectMethodItem>
     {
-        private ServiceClient serviceClient;
+        private readonly ServiceClient serviceClient;
 
         public IoTDirectMethodAsyncCollector(ServiceClient serviceClient, IoTDirectMethodAttribute attribute)
         {
@@ -25,10 +26,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
             return Task.CompletedTask;
         }
 
-        private async Task InvokeMethod(string deviceID, string methodName, string payload, CancellationToken cancellationToken)
+        private async Task InvokeMethod(string deviceID, string methodName, JObject payload, CancellationToken cancellationToken)
         {
             var methodInvocation = new CloudToDeviceMethod(methodName) { ResponseTimeout = TimeSpan.FromSeconds(30) };
-            methodInvocation.SetPayloadJson(payload);
+            methodInvocation.SetPayloadJson(payload.ToString());
             var response = await serviceClient.InvokeDeviceMethodAsync(deviceID, methodInvocation, cancellationToken);
         }
     }

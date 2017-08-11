@@ -13,7 +13,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
     /// </summary>
     public class IoTCloudToDeviceAsyncCollector : IAsyncCollector<IoTCloudToDeviceItem>
     {
-        private ServiceClient serviceClient;
+        private readonly ServiceClient serviceClient;
 
         public IoTCloudToDeviceAsyncCollector(ServiceClient serviceClient, IoTCloudToDeviceAttribute attribute)
         {

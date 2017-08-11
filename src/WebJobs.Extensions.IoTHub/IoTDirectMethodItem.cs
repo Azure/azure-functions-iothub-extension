@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,6 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub
         public string MethodName { set; get; }
         
         // Payload as arguments to the method
-        public string Payload { set; get; }
+        public JObject Payload { set; get; }
     }
 }

@@ -43,12 +43,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTGetDeviceTwinItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, object>>(str);
-
-            return new IoTGetDeviceTwinItem
-            {
-                DeviceId = (string)item["DeviceId"]
-            };
+            return JsonConvert.DeserializeObject<IoTGetDeviceTwinItem>(str);
         }
 
 
@@ -63,9 +58,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
         private async Task GetDeviceTwinAsync(IoTGetDeviceTwinAttribute attribute)
         {
             connectionString = attribute.Connection;
-            if (_manager.TryGetValue(connectionString, out registryManager)) { }
-            else
-            {
+            if (!_manager.TryGetValue(connectionString, out registryManager)) {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
                 _manager.Add(connectionString, registryManager);
             }
