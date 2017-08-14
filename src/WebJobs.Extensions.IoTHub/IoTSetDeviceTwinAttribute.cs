@@ -17,12 +17,6 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub
         [AutoResolve]
         public string DeviceId { get; set; }
 
-        [AutoResolve]
-        public string UpdateId { get; set; }
-
-        [AutoResolve]
-        public string Patch { get; set; }
-
         [AppSetting]
         public string Connection { get; set; }
     }

@@ -9,11 +9,12 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTDirectMethodExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        private static ServiceClient serviceClient;
+        private Dictionary<string, ServiceClient> _clients; // key: connection string
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _clients = new Dictionary<string, ServiceClient>();
+
             // This allows a user to bind to IAsyncCollector<string>, and the sdk
             // will convert that to IAsyncCollector<IoTCloudToDeviceItem>
             context.AddConverter<string, IoTDirectMethodItem>(ConvertToItem);
@@ -35,24 +36,17 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTDirectMethodItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
-
-            return new IoTDirectMethodItem
-            {
-                DeviceId = item["DeviceId"],
-                InvokeId = item["InvokeId"],
-                MethodName = item["MethodName"]
-            };
+            return JsonConvert.DeserializeObject<IoTDirectMethodItem>(str);
         }
 
         private IAsyncCollector<IoTDirectMethodItem> BuildCollector(IoTDirectMethodAttribute attribute)
         {
-            if (serviceClient == null)
-            {
-                connectionString = attribute.Connection;
+            var connectionString = attribute.Connection;
+            ServiceClient serviceClient = null;
+            if (!_clients.TryGetValue(connectionString, out serviceClient)) {
                 serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                _clients.Add(connectionString, serviceClient);
             }
-
             return new IoTDirectMethodAsyncCollector(serviceClient, attribute);
         }
 

@@ -17,7 +17,6 @@ namespace SampleFunctions
             var item = new
             {
                 DeviceId = "receiverBob",
-                MessageId = "1",
                 Message = "Hello"
             };
             output.Add(JsonConvert.SerializeObject(item));
@@ -25,7 +24,6 @@ namespace SampleFunctions
             item = new
             {
                 DeviceId = "receiverBob",
-                MessageId = "2",
                 Message = "From"
             };
             output.Add(JsonConvert.SerializeObject(item));
@@ -33,7 +31,6 @@ namespace SampleFunctions
             item = new
             {
                 DeviceId = "receiverBob",
-                MessageId = "3",
                 Message = "Cloud"
             };
             output.Add(JsonConvert.SerializeObject(item));
@@ -47,7 +44,6 @@ namespace SampleFunctions
             var item = new
             {
                 DeviceId = deviceId,
-                MessageId = "1",
                 Message = "telemetry data point"
             };
             output.Add(JsonConvert.SerializeObject(item));
@@ -58,29 +54,35 @@ namespace SampleFunctions
         public void DirectInvokeMethod(string deviceId,  // from trigger
             [IoTDirectMethod(DeviceId = "{deviceId}", Connection = "IoTConnectionString")] ICollector<string> output)
         {
-            var item = new
+            var item1 = new
             {
                 DeviceId = deviceId,
-                InvokeId = "1",
-                MethodName = "writeLine"
+                MethodName = "writeLine",
+                Payload = new
+                {
+                    arg1 = "HiHo1"
+                }
             };
-            output.Add(JsonConvert.SerializeObject(item));
+            output.Add(JsonConvert.SerializeObject(item1));
 
-            item = new
+            var item2 = new
             {
                 DeviceId = deviceId,
-                InvokeId = "2",
-                MethodName = "writeLine"
+                MethodName = "writeLine",
+                Payload = new
+                {
+                    arg1 = "HiHo2"
+                }
             };
-            output.Add(JsonConvert.SerializeObject(item));
+            output.Add(JsonConvert.SerializeObject(item2));
 
-            item = new
+            var item3 = new
             {
                 DeviceId = deviceId,
-                InvokeId = "3",
-                MethodName = "writeLine"
+                MethodName = "writeLine",
+                Payload = new { }
             };
-            output.Add(JsonConvert.SerializeObject(item));
+            output.Add(JsonConvert.SerializeObject(item3));
         }
 
         // Write some messages
@@ -92,7 +94,6 @@ namespace SampleFunctions
             var item2 = new
             {
                 DeviceId = deviceId,
-                UpdateId = "2",
                 Patch = new
                 {
                     properties = new
@@ -112,7 +113,6 @@ namespace SampleFunctions
             var item = new
             {
                 DeviceId = deviceId,
-                UpdateId = "1",
                 Patch = new
                 {
                     tags = new
@@ -130,7 +130,6 @@ namespace SampleFunctions
             var item3 = new
             {
                 DeviceId = deviceId,
-                UpdateId = "3",
                 Patch = new
                 {
                     properties = new

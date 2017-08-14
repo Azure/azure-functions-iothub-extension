@@ -8,18 +8,17 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTSetDeviceTwinAsyncCollector : IAsyncCollector<IoTSetDeviceTwinItem>
     {
-        static RegistryManager registryManager;
+        private readonly RegistryManager registryManager;
 
         public IoTSetDeviceTwinAsyncCollector(RegistryManager registryManager, IoTSetDeviceTwinAttribute attribute)
         {
             // create client;
-            IoTSetDeviceTwinAsyncCollector.registryManager = registryManager;
+            this.registryManager = registryManager;
         }
 
-        public Task AddAsync(IoTSetDeviceTwinItem item, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task AddAsync(IoTSetDeviceTwinItem item, CancellationToken cancellationToken = default(CancellationToken))
         {
-            SetDesiredConfigurationAndQuery(item).Wait();
-            return Task.CompletedTask;
+            await SetDesiredConfigurationAndQuery(item, cancellationToken);
         }
 
         public Task FlushAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -27,11 +26,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
             return Task.CompletedTask;
         }
 
-        static private async Task SetDesiredConfigurationAndQuery(IoTSetDeviceTwinItem item)
+        private async Task SetDesiredConfigurationAndQuery(IoTSetDeviceTwinItem item, CancellationToken cancellationToken)
         {
-            var twin = await registryManager.GetTwinAsync(item.DeviceId);
-            await registryManager.UpdateTwinAsync(twin.DeviceId, item.Patch, twin.ETag);
-            Console.WriteLine("Updated desired configuration");
+            var twin = await registryManager.GetTwinAsync(item.DeviceId, cancellationToken); // how to include cancellation token?
+            await registryManager.UpdateTwinAsync(twin.DeviceId, item.Patch.ToString(), twin.ETag);
         }
     }
 }

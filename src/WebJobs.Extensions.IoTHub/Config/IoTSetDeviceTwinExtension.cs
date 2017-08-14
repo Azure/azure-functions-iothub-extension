@@ -9,11 +9,12 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTSetDeviceTwinExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        static RegistryManager registryManager;
+        private Dictionary<string, RegistryManager> _manager; // key: connection string
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _manager = new Dictionary<string, RegistryManager>();
+
             // This allows a user to bind to IAsyncCollector<string>, and the sdk
             // will convert that to IAsyncCollector<IoTCloudToDeviceItem>
             context.AddConverter<string, IoTSetDeviceTwinItem>(ConvertToItem);
@@ -35,22 +36,16 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTSetDeviceTwinItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, object>>(str);
-
-            return new IoTSetDeviceTwinItem
-            {
-                DeviceId = (string)item["DeviceId"],
-                UpdateId = (string)item["UpdateId"],
-                Patch = JsonConvert.SerializeObject(item["Patch"])
-            };
+            return JsonConvert.DeserializeObject<IoTSetDeviceTwinItem>(str);
         }
 
         private IAsyncCollector<IoTSetDeviceTwinItem> BuildCollector(IoTSetDeviceTwinAttribute attribute)
         {
-            if (registryManager == null)
-            {
-                connectionString = attribute.Connection;
+            var connectionString = attribute.Connection;
+            RegistryManager registryManager = null;
+            if (!_manager.TryGetValue(connectionString, out registryManager)) {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                _manager.Add(connectionString, registryManager);
             }
 
             return new IoTSetDeviceTwinAsyncCollector(registryManager, attribute);

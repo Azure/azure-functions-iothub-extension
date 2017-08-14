@@ -11,7 +11,7 @@ function onWriteLine(request, response) {
         if (err) {
             console.error('An error occurred when sending a method response:\n' + err.toString());
         } else {
-            console.log('Response to method \'' + request.methodName + '\' sent successfully.');
+            console.log('Response to method \'' + request.methodName + "\' with Payload: \'" + request.payload + '\' sent successfully.');
         }
     });
 }

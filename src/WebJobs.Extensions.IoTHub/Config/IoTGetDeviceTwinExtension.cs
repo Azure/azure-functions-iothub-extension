@@ -11,12 +11,13 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 {
     public class IoTGetDeviceTwinExtension : IExtensionConfigProvider
     {
-        private static string connectionString;
-        static RegistryManager registryManager;
+        private Dictionary<string, RegistryManager> _manager; // key: connection string
         private Twin deviceTwin;
 
         public void Initialize(ExtensionConfigContext context)
         {
+            _manager = new Dictionary<string, RegistryManager>();
+
             // This is useful on input. 
             context.AddConverter<Twin, string>(ConvertToString);
             context.AddConverter<Twin, Newtonsoft.Json.Linq.JObject>(ConvertToJObject);
@@ -31,12 +32,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
         private string ConvertToString(Twin item)
         {
             return JsonConvert.SerializeObject(item);
-        }
-
-        //private Twin ConvertToTwin(Twin item)
-        //{
-        //    return item;
-        //}
+        }        
 
         private JObject ConvertToJObject(Twin results)
         {
@@ -45,12 +41,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private IoTGetDeviceTwinItem ConvertToItem(string str)
         {
-            var item = JsonConvert.DeserializeObject<Dictionary<string, object>>(str);
-
-            return new IoTGetDeviceTwinItem
-            {
-                DeviceId = (string)item["DeviceId"]
-            };
+            return JsonConvert.DeserializeObject<IoTGetDeviceTwinItem>(str);
         }
 
 
@@ -64,10 +55,11 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
 
         private async Task GetDeviceTwinAsync(IoTGetDeviceTwinAttribute attribute)
         {
-            if (registryManager == null)
-            {
-                connectionString = attribute.Connection;
+            var connectionString = attribute.Connection;
+            RegistryManager registryManager = null;
+            if (!_manager.TryGetValue(connectionString, out registryManager)) {
                 registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                _manager.Add(connectionString, registryManager);
             }
 
             deviceTwin = await registryManager.GetTwinAsync(attribute.DeviceId);

@@ -13,17 +13,16 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
     /// </summary>
     public class IoTCloudToDeviceAsyncCollector : IAsyncCollector<IoTCloudToDeviceItem>
     {
-        private static ServiceClient serviceClient;
+        private readonly ServiceClient serviceClient;
 
         public IoTCloudToDeviceAsyncCollector(ServiceClient serviceClient, IoTCloudToDeviceAttribute attribute)
         {
             // create client;    
-            IoTCloudToDeviceAsyncCollector.serviceClient = serviceClient;
+            this.serviceClient = serviceClient;
         }
-        public Task AddAsync(IoTCloudToDeviceItem item, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task AddAsync(IoTCloudToDeviceItem item, CancellationToken cancellationToken = default(CancellationToken))
         {
-            SendCloudToDeviceMessageAsync(item).Wait();
-            return Task.CompletedTask;
+            await SendCloudToDeviceMessageAsync(item);
         }
 
         public Task FlushAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -31,7 +30,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.IoTHub.Config
             return Task.CompletedTask;
         }
 
-        private async static Task SendCloudToDeviceMessageAsync(IoTCloudToDeviceItem item)
+        private async Task SendCloudToDeviceMessageAsync(IoTCloudToDeviceItem item)
         {
             char[] messageCharArr = item.Message.ToCharArray();
             var deviceToCloudMessage = new Message(Encoding.ASCII.GetBytes(messageCharArr));
