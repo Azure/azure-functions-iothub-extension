@@ -6,6 +6,10 @@ Fully featured IoT Hub input and output bindings to Azure IoT Hub, allowing comm
   * Set Device Twin: output binding that updates desired properties of specified device from Azure Functions
   * Get Device Twin: input binding that gets device twin of the specified device once the Function's trigger is fired
 
+#### Current Status
+
+This extension is still in the prototype phase and has not been published to NuGet. If you need to process IOT Hub messages with Azure Functions, the currently supported method is documented [here](https://docs.microsoft.com/en-us/samples/azure-samples/functions-js-iot-hub-processing/processing-data-from-iot-hub-with-azure-functions/).
+
 #### Example
 
 ##### Cloud to Device
