@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "azure-iot-device-mqtt": "^1.1.16"
+    "azure-iot-device-mqtt": "^1.16.2"
   }
 }
